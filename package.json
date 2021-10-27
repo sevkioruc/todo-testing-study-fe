@@ -13,6 +13,7 @@
     "vue": "^2.6.11"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/vue": "^5.8.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
