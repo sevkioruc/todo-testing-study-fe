@@ -34,6 +34,7 @@ describe('Todo', () => {
 	describe('Interactions', () => {
 		let requestBody
 		let counter = 0
+		let todoInput;
 
 		const server = setupServer(
 			rest.post('/v1/todo', (req, res, ctx) => {
@@ -45,7 +46,7 @@ describe('Todo', () => {
 
 		const setup = async () => {
 			render(Todo)
-			const todoInput = screen.getByTestId('todo-input')
+			todoInput = screen.getByTestId('todo-input')
 			await userEvent.type(todoInput, 'Anything..')
 		}
 
@@ -109,7 +110,6 @@ describe('Todo', () => {
 		it('input must be cleared after the create todo', async () => {
 			await setup()
 
-			const todoInput = screen.getByTestId('todo-input')
 			const button = screen.queryByText('Create')
 			await userEvent.click(button)
 
