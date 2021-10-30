@@ -1,6 +1,7 @@
 import Todo from '../src/components/Todo.vue'
 import { render, screen } from '@testing-library/vue'
 import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 
 describe('Todo', () => {
 	describe('Layout', () => {
@@ -32,6 +33,15 @@ describe('Todo', () => {
 			render(Todo)
 			const button = screen.queryByText('Create')
 			expect(button).toBeDisabled()
+		})
+	})
+	describe('Interactions', () => {
+		it('enables the add todo button when the todo field is filled', async () => {
+			render(Todo)
+			const button = screen.queryByText('Create')
+			const todoInput = screen.getByTestId('todo-input')
+			await userEvent.type(todoInput, 'Anything..')
+			expect(button).toBeEnabled()
 		})
 	})
 })
