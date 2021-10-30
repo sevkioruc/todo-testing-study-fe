@@ -25,7 +25,6 @@
           ></span>
           Create
         </button>
-        <button class="btn btn-outline-danger" type="button">X</button>
       </div>
     </div>
   </div>
