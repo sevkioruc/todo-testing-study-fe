@@ -6,7 +6,9 @@
     <div class="row mt-3 mb-3">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Todo.." />
-        <button class="btn btn-outline-primary" type="button">Create</button>
+        <button class="btn btn-outline-primary" disabled type="button">
+          Create
+        </button>
         <button class="btn btn-outline-danger" type="button">X</button>
       </div>
     </div>

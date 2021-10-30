@@ -27,5 +27,11 @@ describe('Todo', () => {
 			const button = screen.queryByText('X')
 			expect(button).toBeInTheDocument()
 		})
+
+		it('dissables the add todo button initially', () => {
+			render(Todo)
+			const button = screen.queryByText('Create')
+			expect(button).toBeDisabled()
+		})
 	})
 })
