@@ -18,7 +18,7 @@ describe('Todo', () => {
 
 		it('has add todo button', () => {
 			const { container } = render(Todo)
-			const button = container.querySelector('button')
+			const button = screen.queryByText('Create')
 			expect(button).toBeInTheDocument()
 		})
 
