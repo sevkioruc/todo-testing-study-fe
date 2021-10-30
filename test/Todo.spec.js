@@ -1,5 +1,5 @@
 import Todo from '../src/components/Todo.vue'
-import { render, screen } from '@testing-library/vue'
+import { render, screen, waitFor } from '@testing-library/vue'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { setupServer } from 'msw/node'
@@ -64,6 +64,39 @@ describe('Todo', () => {
 			await server.close()
 
 			expect(requestBody).toEqual({ content: 'Anything..' })
+		})
+
+		it('displays spinner while the api request in progress', async () => {
+			const server = setupServer(
+				rest.post('/v1/todo', (req, res, ctx) => {
+					requestBody = req.body
+					return res(ctx.status(200))
+				})
+			)
+			server.listen()
+
+			render(Todo)
+			const button = screen.queryByText('Create')
+			const todoInput = screen.getByTestId('todo-input')
+			await userEvent.type(todoInput, 'Anything..')
+			await userEvent.click(button)
+
+			const spinner = screen.queryByRole('status')
+			expect(spinner).toBeInTheDocument()
+		})
+
+		it('does not display spinner when api request ended', async () => {
+			render(Todo)
+			const button = screen.queryByText('Create')
+			const todoInput = screen.getByTestId('todo-input')
+			await userEvent.type(todoInput, 'Anything..')
+			await userEvent.click(button)
+
+			const spinner = screen.queryByRole('status')
+
+			await waitFor(() => {
+				expect(spinner).not.toBeInTheDocument()
+			}, { timeout: 10000 })
 		})
 	})
 })

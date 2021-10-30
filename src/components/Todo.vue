@@ -18,6 +18,11 @@
           type="button"
           @click.prevent="submit"
         >
+          <span
+            class="spinner-border spinner-border-sm"
+            v-if="apiProgress"
+            role="status"
+          ></span>
           Create
         </button>
         <button class="btn btn-outline-danger" type="button">X</button>
@@ -34,11 +39,19 @@ export default {
     return {
       disabled: true,
       todoInput: "",
+      apiProgress: false,
     };
   },
   methods: {
     submit() {
-      axios.post("/v1/todo", { content: this.todoInput });
+      this.apiProgress = true;
+      axios
+        .post("/v1/todo", { content: this.todoInput })
+        .then(() => {})
+        .catch(() => {})
+        .finally(() => {
+          this.apiProgress = false;
+        });
     },
   },
   computed: {
