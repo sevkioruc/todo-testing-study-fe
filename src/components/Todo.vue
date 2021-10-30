@@ -53,6 +53,7 @@ export default {
         .finally(() => {
           this.apiProgress = false;
           this.disabled = false;
+          this.todoInput = "";
         });
     },
   },

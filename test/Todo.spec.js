@@ -4,6 +4,7 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
+
 describe('Todo', () => {
 	describe('Layout', () => {
 		it('has Todo header', () => {
@@ -130,6 +131,29 @@ describe('Todo', () => {
 			await server.close()
 
 			expect(counter).toBe(1)
+		})
+
+		it('input must be cleared after the create todo', async () => {
+			const server = setupServer(
+				rest.post('/v1/todo', (req, res, ctx) => {
+					return res(ctx.status(200))
+				})
+			)
+
+			server.listen()
+
+			render(Todo)
+			const button = screen.queryByText('Create')
+			const todoInput = screen.getByTestId('todo-input')
+			await userEvent.type(todoInput, 'Anything..')
+
+			await userEvent.click(button)
+
+			await server.close()
+
+			await waitFor(() => {
+				expect(todoInput).toHaveValue('')
+			}, { timeout: 10000 })
 		})
 	})
 })
