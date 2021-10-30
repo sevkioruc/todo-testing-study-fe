@@ -66,8 +66,8 @@ describe('Todo', () => {
 
 		it('sends todo to backend after clicking create button', async () => {
 			await setup()
-
 			const button = screen.queryByText('Create')
+
 			await userEvent.click(button)
 
 			expect(requestBody).toEqual({ content: 'Anything..' })
@@ -75,8 +75,8 @@ describe('Todo', () => {
 
 		it('displays spinner while the api request in progress', async () => {
 			await setup()
-
 			const button = screen.queryByText('Create')
+
 			await userEvent.click(button)
 
 			const spinner = screen.queryByRole('status')
@@ -86,8 +86,8 @@ describe('Todo', () => {
 
 		it('does not display spinner when api request ended', async () => {
 			await setup()
-
 			const button = screen.queryByText('Create')
+
 			await userEvent.click(button)
 
 			const spinner = screen.queryByRole('status')
@@ -99,8 +99,8 @@ describe('Todo', () => {
 
 		it('does not allow clicking to create button when there is an ongoing api call', async () => {
 			await setup()
-
 			const button = screen.queryByText('Create')
+
 			await userEvent.click(button)
 			await userEvent.click(button)
 
@@ -109,8 +109,8 @@ describe('Todo', () => {
 
 		it('input must be cleared after the create todo', async () => {
 			await setup()
-
 			const button = screen.queryByText('Create')
+
 			await userEvent.click(button)
 
 			await waitFor(() => {
