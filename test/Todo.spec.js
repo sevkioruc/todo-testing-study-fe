@@ -25,12 +25,6 @@ describe('Todo', () => {
 			expect(button).toBeInTheDocument()
 		})
 
-		it('has clear todo input button', () => {
-			render(Todo)
-			const button = screen.queryByText('X')
-			expect(button).toBeInTheDocument()
-		})
-
 		it('dissables the add todo button initially', () => {
 			render(Todo)
 			const button = screen.queryByText('Create')
@@ -38,68 +32,61 @@ describe('Todo', () => {
 		})
 	})
 	describe('Interactions', () => {
-		it('enables the add todo button when the todo field is filled', async () => {
+		let requestBody
+		let counter = 0
+
+		const server = setupServer(
+			rest.post('/v1/todo', (req, res, ctx) => {
+				requestBody = req.body
+				counter += 1
+				return res(ctx.status(200))
+			})
+		)
+
+		const setup = async () => {
 			render(Todo)
-			const button = screen.queryByText('Create')
 			const todoInput = screen.getByTestId('todo-input')
 			await userEvent.type(todoInput, 'Anything..')
+		}
+
+		beforeAll(() => server.listen())
+
+		beforeEach(() => { counter = 0 })
+
+		afterAll(() => server.close())
+
+
+		it('enables the add todo button when the todo field is filled', async () => {
+			await setup()
+			const button = screen.queryByText('Create')
+
 			expect(button).toBeEnabled()
 		})
 
 		it('sends todo to backend after clicking create button', async () => {
-			let requestBody
-			const server = setupServer(
-				rest.post('/v1/todo', (req, res, ctx) => {
-					requestBody = req.body
-					return res(ctx.status(200))
-				})
-			)
-			server.listen()
+			await setup()
 
-			render(Todo)
 			const button = screen.queryByText('Create')
-			const todoInput = screen.getByTestId('todo-input')
-			await userEvent.type(todoInput, 'Anything..')
 			await userEvent.click(button)
-
-			await server.close()
 
 			expect(requestBody).toEqual({ content: 'Anything..' })
 		})
 
 		it('displays spinner while the api request in progress', async () => {
-			const server = setupServer(
-				rest.post('/v1/todo', (req, res, ctx) => {
-					requestBody = req.body
-					return res(ctx.status(200))
-				})
-			)
-			server.listen()
+			await setup()
 
-			render(Todo)
 			const button = screen.queryByText('Create')
-			const todoInput = screen.getByTestId('todo-input')
-			await userEvent.type(todoInput, 'Anything..')
 			await userEvent.click(button)
 
 			const spinner = screen.queryByRole('status')
+
 			expect(spinner).toBeInTheDocument()
 		})
 
 		it('does not display spinner when api request ended', async () => {
-			const server = setupServer(
-				rest.post('/v1/todo', (req, res, ctx) => {
-					requestBody = req.body
-					return res(ctx.status(200))
-				})
-			)
+			await setup()
 
-			server.listen()
-
-			render(Todo)
 			const button = screen.queryByText('Create')
-			const todoInput = screen.getByTestId('todo-input')
-			await userEvent.type(todoInput, 'Anything..')
 			await userEvent.click(button)
 
 			const spinner = screen.queryByRole('status')
@@ -110,46 +97,21 @@ describe('Todo', () => {
 		})
 
 		it('does not allow clicking to create button when there is an ongoing api call', async () => {
-			let counter = 0
-			const server = setupServer(
-				rest.post('/v1/todo', (req, res, ctx) => {
-					counter += 1
-					return res(ctx.status(200))
-				})
-			)
+			await setup()
 
-			server.listen()
-
-			render(Todo)
 			const button = screen.queryByText('Create')
-			const todoInput = screen.getByTestId('todo-input')
-			await userEvent.type(todoInput, 'Anything..')
-
 			await userEvent.click(button)
 			await userEvent.click(button)
-
-			await server.close()
 
 			expect(counter).toBe(1)
 		})
 
 		it('input must be cleared after the create todo', async () => {
-			const server = setupServer(
-				rest.post('/v1/todo', (req, res, ctx) => {
-					return res(ctx.status(200))
-				})
-			)
+			await setup()
 
-			server.listen()
-
-			render(Todo)
-			const button = screen.queryByText('Create')
 			const todoInput = screen.getByTestId('todo-input')
-			await userEvent.type(todoInput, 'Anything..')
-
+			const button = screen.queryByText('Create')
 			await userEvent.click(button)
-
-			await server.close()
 
 			await waitFor(() => {
 				expect(todoInput).toHaveValue('')
