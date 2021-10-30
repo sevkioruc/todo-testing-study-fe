@@ -107,5 +107,29 @@ describe('Todo', () => {
 				expect(spinner).not.toBeInTheDocument()
 			}, { timeout: 10000 })
 		})
+
+		it('does not allow clicking to create button when there is an ongoing api call', async () => {
+			let counter = 0
+			const server = setupServer(
+				rest.post('/v1/todo', (req, res, ctx) => {
+					counter += 1
+					return res(ctx.status(200))
+				})
+			)
+
+			server.listen()
+
+			render(Todo)
+			const button = screen.queryByText('Create')
+			const todoInput = screen.getByTestId('todo-input')
+			await userEvent.type(todoInput, 'Anything..')
+
+			await userEvent.click(button)
+			await userEvent.click(button)
+
+			await server.close()
+
+			expect(counter).toBe(1)
+		})
 	})
 })

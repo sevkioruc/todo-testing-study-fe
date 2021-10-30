@@ -14,7 +14,7 @@
         />
         <button
           class="btn btn-outline-primary"
-          :disabled="isDisabled"
+          :disabled="isDisabled || disabled"
           type="button"
           @click.prevent="submit"
         >
@@ -37,7 +37,7 @@ export default {
   name: "Todo",
   data() {
     return {
-      disabled: true,
+      disabled: false,
       todoInput: "",
       apiProgress: false,
     };
@@ -45,12 +45,14 @@ export default {
   methods: {
     submit() {
       this.apiProgress = true;
+      this.disabled = true;
       axios
         .post("/v1/todo", { content: this.todoInput })
         .then(() => {})
         .catch(() => {})
         .finally(() => {
           this.apiProgress = false;
+          this.disabled = false;
         });
     },
   },
