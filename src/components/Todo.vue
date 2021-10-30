@@ -16,6 +16,7 @@
           class="btn btn-outline-primary"
           :disabled="isDisabled"
           type="button"
+          @click.prevent="submit"
         >
           Create
         </button>
@@ -26,6 +27,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Todo",
   data() {
@@ -33,6 +35,11 @@ export default {
       disabled: true,
       todoInput: "",
     };
+  },
+  methods: {
+    submit() {
+      axios.post("/v1/todo", { content: this.todoInput });
+    },
   },
   computed: {
     isDisabled() {

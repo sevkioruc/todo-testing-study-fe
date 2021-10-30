@@ -2,7 +2,8 @@ import Todo from '../src/components/Todo.vue'
 import { render, screen } from '@testing-library/vue'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-
+import { setupServer } from 'msw/node'
+import { rest } from 'msw'
 describe('Todo', () => {
 	describe('Layout', () => {
 		it('has Todo header', () => {
@@ -42,6 +43,27 @@ describe('Todo', () => {
 			const todoInput = screen.getByTestId('todo-input')
 			await userEvent.type(todoInput, 'Anything..')
 			expect(button).toBeEnabled()
+		})
+
+		it('sends todo to backend after clicking create button', async () => {
+			let requestBody
+			const server = setupServer(
+				rest.post('/v1/todo', (req, res, ctx) => {
+					requestBody = req.body
+					return res(ctx.status(200))
+				})
+			)
+			server.listen()
+
+			render(Todo)
+			const button = screen.queryByText('Create')
+			const todoInput = screen.getByTestId('todo-input')
+			await userEvent.type(todoInput, 'Anything..')
+			await userEvent.click(button)
+
+			await server.close()
+
+			expect(requestBody).toEqual({ content: 'Anything..' })
 		})
 	})
 })
