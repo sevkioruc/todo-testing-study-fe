@@ -86,6 +86,15 @@ describe('Todo', () => {
 		})
 
 		it('does not display spinner when api request ended', async () => {
+			const server = setupServer(
+				rest.post('/v1/todo', (req, res, ctx) => {
+					requestBody = req.body
+					return res(ctx.status(200))
+				})
+			)
+
+			server.listen()
+
 			render(Todo)
 			const button = screen.queryByText('Create')
 			const todoInput = screen.getByTestId('todo-input')
