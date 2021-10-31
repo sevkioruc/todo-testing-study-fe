@@ -1,4 +1,4 @@
-import Todo from '../src/components/Todo.vue'
+import TodoCreate from '../src/components/TodoCreate.vue'
 import { render, screen, waitFor } from '@testing-library/vue'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
@@ -8,25 +8,25 @@ import { rest } from 'msw'
 describe('Todo', () => {
 	describe('Layout', () => {
 		it('has Todo header', () => {
-			render(Todo)
+			render(TodoCreate)
 			const header = screen.queryByRole('heading', { name: 'Todos' })
 			expect(header).toBeInTheDocument()
 		})
 
 		it('has todo input', () => {
-			const { container } = render(Todo)
+			const { container } = render(TodoCreate)
 			const input = container.querySelector('input')
 			expect(input).toBeInTheDocument()
 		})
 
 		it('has add todo button', () => {
-			const { container } = render(Todo)
+			const { container } = render(TodoCreate)
 			const button = screen.queryByText('Create')
 			expect(button).toBeInTheDocument()
 		})
 
 		it('dissables the add todo button initially', () => {
-			render(Todo)
+			render(TodoCreate)
 			const button = screen.queryByText('Create')
 			expect(button).toBeDisabled()
 		})
@@ -45,7 +45,7 @@ describe('Todo', () => {
 		)
 
 		const setup = async () => {
-			render(Todo)
+			render(TodoCreate)
 			todoInput = screen.getByTestId('todo-input')
 			await userEvent.type(todoInput, 'Anything..')
 		}
