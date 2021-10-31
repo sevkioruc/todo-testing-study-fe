@@ -22,6 +22,23 @@ fdescribe('TodoList', () => {
 	beforeAll(() => server.listen())
 	afterAll(() => server.close())
 
+	it('displays spinner while todos is loading', () => {
+		render(TodoList)
+		const spinner = screen.queryByRole('status')
+
+		expect(spinner).toBeInTheDocument()
+	})
+
+	it('does not display spinner when todos is loaded', async () => {
+		render(TodoList)
+
+		const spinner = screen.queryByRole('status')
+
+		await waitFor(() => {
+			expect(spinner).not.toBeInTheDocument()
+		}, { timeout: 10000 })
+	})
+
 	it('displays three todos in list', async () => {
 		render(TodoList)
 		const todos = await screen.findAllByText(/Todo/)
