@@ -5,10 +5,14 @@
       v-if="apiProgress"
       role="status"
     ></div>
-    <div class="card" v-for="(todo, index) in todos" :key="index">
-      <div class="card-body">
-        <p class="card-text">{{ todo.content }}</p>
-      </div>
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" v-for="(todo, index) in todos" :key="index">
+          <p class="card-text">
+            {{ todo.content }}
+          </p>
+        </li>
+      </ul>
     </div>
   </div>
 </template>

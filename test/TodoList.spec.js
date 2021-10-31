@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 
-fdescribe('TodoList', () => {
+describe('TodoList', () => {
 	const response = {
 		todos: [
 			{ id: 1, content: 'Todo1' },
@@ -20,6 +20,7 @@ fdescribe('TodoList', () => {
 	)
 
 	beforeAll(() => server.listen())
+
 	afterAll(() => server.close())
 
 	it('displays spinner while todos is loading', () => {
