@@ -70,7 +70,7 @@ describe('Todo', () => {
 
 			await userEvent.click(button)
 
-			expect(requestBody).toEqual({ content: 'Anything..' })
+			expect(requestBody).toEqual({ title: 'Anything..' })
 		})
 
 		it('displays spinner while the api request in progress', async () => {

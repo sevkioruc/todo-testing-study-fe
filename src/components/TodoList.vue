@@ -9,7 +9,7 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item" v-for="(todo, index) in todos" :key="index">
           <p class="card-text">
-            {{ todo.content }}
+            {{ todo.title }}
           </p>
         </li>
       </ul>

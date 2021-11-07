@@ -7,9 +7,9 @@ import { rest } from 'msw'
 describe('TodoList', () => {
 	const response = {
 		todos: [
-			{ id: 1, content: 'Todo1' },
-			{ id: 2, content: 'Todo2' },
-			{ id: 3, content: 'Todo3' }
+			{ id: 1, title: 'Todo1' },
+			{ id: 2, title: 'Todo2' },
+			{ id: 3, title: 'Todo3' }
 		]
 	}
 

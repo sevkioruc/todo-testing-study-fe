@@ -9,7 +9,7 @@
           type="text"
           class="form-control"
           data-testid="todo-input"
-          v-model="todoInput"
+          v-model="todoTitle"
           placeholder="Todo.."
         />
         <button
@@ -33,11 +33,11 @@
 <script>
 import axios from "axios";
 export default {
-  name: "Todo",
+  name: "TodoCreate",
   data() {
     return {
       disabled: false,
-      todoInput: "",
+      todoTitle: "",
       apiProgress: false,
     };
   },
@@ -46,19 +46,19 @@ export default {
       this.apiProgress = true;
       this.disabled = true;
       axios
-        .post("/v1/todo", { content: this.todoInput })
+        .post("/v1/todo", { title: this.todoTitle })
         .then(() => {})
         .catch(() => {})
         .finally(() => {
           this.apiProgress = false;
           this.disabled = false;
-          this.todoInput = "";
+          this.todoTitle = "";
         });
     },
   },
   computed: {
     isDisabled() {
-      return this.todoInput === "";
+      return this.todoTitle === "";
     },
   },
 };
